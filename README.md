@@ -7,7 +7,7 @@ This repository is designed to be forked once and improved throughout the curric
 ## Start here
 
 1. Install Node.js 24 and Git.
-2. Fork this repository to your GitHub account. Do not push to the upstream repository.
+2. Fork this repository to your GitHub account. Push your changes only to your fork, never to the upstream repository.
 3. Clone your fork and configure the upstream remote:
 
    ```bash
