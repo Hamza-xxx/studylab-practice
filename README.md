@@ -20,7 +20,7 @@ This repository is designed to be forked once and improved throughout the curric
 
 4. Open the assignment linked from your Astudylab task.
 5. Create one branch per assignment, make the change, run the required checks, and open a pull request into `main` **inside your fork**.
-6. Wait for the `Practice quality` check, request mentor review, and paste that pull-request URL into Astudylab. Merge into your fork only after approval.
+6. Wait until the `Practice quality` check passes, then request mentor review. After your pull request is approved, paste its URL into Astudylab and merge it into your fork.
 
 The canonical `TechArc-io/studylab-practice` repository stays a clean starting point. Your fork is your cumulative learning record; assignments are not merged into the canonical repository.
 
