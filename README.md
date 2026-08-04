@@ -18,7 +18,7 @@ This repository is designed to be forked once and improved throughout the curric
    npm run check
    ```
 
-4. Open the assignment linked from your Astudylab task.
+4. OOpen the assignment linked to your current Astudylab task.
 5. Create one branch per assignment, make the change, run the required checks, and open a pull request into `main` **inside your fork**.
 6. Wait for the `Practice quality` check, request mentor review, and paste that pull-request URL into Astudylab. Merge into your fork only after approval.
 
