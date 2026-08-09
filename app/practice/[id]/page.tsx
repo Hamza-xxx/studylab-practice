@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { practiceItems } from "@/src/data/practice-items";
+import { getPracticeById } from "@/app/lib/practice";
 
 type PracticePageProps = {
   params: Promise<{
@@ -14,9 +14,7 @@ export default async function PracticePage({
 }: PracticePageProps) {
   const { id } = await params;
 
-  const item = practiceItems.find(
-    (practice) => practice.id === id
-  );
+  const item = getPracticeById(id);
 
   if (!item) {
     notFound();
