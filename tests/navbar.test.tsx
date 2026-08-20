@@ -8,25 +8,25 @@ afterEach(() => {
 
 describe("Navbar", () => {
   it("opens and closes the navigation menu", () => {
-    render(<Navbar />);
+    const { container } = render(<Navbar />);
+    const menu = container.querySelector("#primary-navigation");
+
+    expect(menu).not.toHaveClass("site-nav__links--open");
 
     const menuButton = screen.getByRole("button", {
       name: /open navigation menu/i,
     });
 
-    expect(menuButton).toHaveAttribute("aria-expanded", "false");
-
     fireEvent.click(menuButton);
 
+    expect(menu).toHaveClass("site-nav__links--open");
     expect(menuButton).toHaveAttribute("aria-expanded", "true");
-    expect(
-      screen.getByRole("button", { name: /close navigation menu/i }),
-    ).toHaveAttribute("aria-expanded", "true");
 
     fireEvent.click(
       screen.getByRole("button", { name: /close navigation menu/i }),
     );
 
+    expect(menu).not.toHaveClass("site-nav__links--open");
     expect(
       screen.getByRole("button", { name: /open navigation menu/i }),
     ).toHaveAttribute("aria-expanded", "false");
@@ -48,6 +48,24 @@ describe("Navbar", () => {
     expect(
       screen.getByRole("button", { name: /open navigation menu/i }),
     ).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("returns focus to the toggle when Escape closes the menu", () => {
+    render(<Navbar />);
+
+    const menuButton = screen.getByRole("button", {
+      name: /open navigation menu/i,
+    });
+
+    fireEvent.click(menuButton);
+
+    screen.getByRole("link", { name: "Home" }).focus();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(
+      screen.getByRole("button", { name: /open navigation menu/i }),
+    ).toHaveFocus();
   });
 
   it("keeps meaningful navigation links available", () => {
