@@ -7,7 +7,7 @@ This repository is designed to be forked once and improved throughout the curric
 ## Start here
 
 1. Install Node.js 24 and Git.
-2. Fork this repository to your GitHub account. Do not push to the upstream repository.
+2. Fork this repository to your GitHub account. Push your changes only to your fork, never to the upstream repository.
 3. Clone your fork and configure the upstream remote:
 
    ```bash
@@ -18,7 +18,8 @@ This repository is designed to be forked once and improved throughout the curric
    npm run check
    ```
 
-4. Open the assignment linked from your Astudylab task.
+
+4. Open the assignment that matches the task shown in your Astudylab dashboard.
 5. Create one branch per assignment, make the change, run the required checks, and open a pull request into `main` **inside your fork**.
 6. Wait for the `Practice quality` check, request mentor review, and paste that pull-request URL into Astudylab. Merge into your fork only after approval.
 
