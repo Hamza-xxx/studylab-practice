@@ -9,7 +9,7 @@ const catalog = JSON.parse(
 export function validatePullRequest({ title, headRef, baseRef }) {
   const errors = [];
   const assignment = catalog.assignments.find(
-    ({ id }) => title.includes(`[${id}]`) || headRef === `assignment/${id}` || headRef.startsWith(`assignment/${id}-`),
+    ({ id, submission }) => title.includes(`[${id}]`) || headRef === submission.branchPrefix || headRef.startsWith(`${submission.branchPrefix}-`),
   );
 
   if (!assignment) {
@@ -19,8 +19,8 @@ export function validatePullRequest({ title, headRef, baseRef }) {
   if (baseRef !== "main") {
     errors.push("Learner pull requests must target main in your own fork.");
   }
-  if (!(headRef === `assignment/${assignment.id}` || headRef.startsWith(`assignment/${assignment.id}-`))) {
-    errors.push(`Branch must start with assignment/${assignment.id}.`);
+  if (!(headRef === assignment.submission.branchPrefix || headRef.startsWith(`${assignment.submission.branchPrefix}-`))) {
+    errors.push(`Branch must start with ${assignment.submission.branchPrefix}.`);
   }
   if (!title.includes(`[${assignment.id}]`)) {
     errors.push(`PR title must include [${assignment.id}].`);
