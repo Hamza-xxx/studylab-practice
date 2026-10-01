@@ -19,82 +19,89 @@ const CANONICAL_MODULES = new Set([
   "quality-ci",
   "responsible-ai",
 ]);
+
+function expectedSubmission(id, evidence) {
+  return {
+    target: "learner-fork",
+    evidence,
+    branchPrefix: `assignment/${id}`,
+    requiredChecks: ["Practice quality"],
+  };
+}
+
 const EXPECTED_ASSIGNMENTS = new Map([
   ["tt-fork-first-pr", {
     moduleId: "git-github",
     tier: "practice",
     path: "assignments/08-first-fork-pr.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("tt-fork-first-pr", "github-pr"),
   }],
   ["tt-responsive-navbar", {
     moduleId: "react",
     tier: "practice",
     path: "assignments/09-responsive-navbar.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("tt-responsive-navbar", "github-pr"),
   }],
   ["tt-fix-broken-fetch", {
     moduleId: "react",
     tier: "practice",
     path: "assignments/10-resilient-data-states.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("tt-fix-broken-fetch", "github-pr"),
   }],
   ["tt-404-page", {
     moduleId: "nextjs",
     tier: "practice",
     path: "assignments/11-app-router-not-found.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("tt-404-page", "github-pr"),
   }],
   ["tt-deploy-vercel", {
     moduleId: "quality-ci",
     tier: "practice",
     path: "assignments/12-vercel-deployment.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("tt-deploy-vercel", "github-pr"),
   }],
   ["ms-git-collab", {
     moduleId: "git-github",
     tier: "milestone",
     path: "assignments/01-git-collaboration.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    prerequisites: { modules: ["git-github"], approvedTasks: ["tt-fork-first-pr"] },
+    submission: expectedSubmission("ms-git-collab", "github-pr"),
   }],
   ["ms-ts-types", {
     moduleId: "typescript",
     tier: "milestone",
     path: "assignments/02-typescript-data-boundary.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("ms-ts-types", "github-pr"),
   }],
   ["ms-react-ui", {
     moduleId: "react",
     tier: "milestone",
     path: "assignments/03-react-accessible-list.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("ms-react-ui", "github-pr"),
   }],
   ["ms-next-route", {
     moduleId: "nextjs",
     tier: "milestone",
     path: "assignments/04-next-route-action.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("ms-next-route", "github-pr"),
   }],
   ["ms-realworld-ci", {
     moduleId: "quality-ci",
     tier: "milestone",
     path: "assignments/05-quality-ci.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("ms-realworld-ci", "github-pr"),
   }],
   ["ms-ai-workflow", {
     moduleId: "responsible-ai",
     tier: "milestone",
     path: "assignments/06-responsible-ai.md",
-    submission: { target: "learner-fork", evidence: "github-pr", requiredChecks: ["Practice quality"] },
+    submission: expectedSubmission("ms-ai-workflow", "github-pr"),
   }],
   ["capstone-frontend", {
     moduleId: "quality-ci",
     tier: "capstone",
     path: "assignments/07-capstone.md",
-    submission: {
-      target: "learner-fork",
-      evidence: "deployment",
-      requiredChecks: ["Practice quality"],
-    },
+    submission: expectedSubmission("capstone-frontend", "deployment"),
   }],
 ]);
 const NEW_PRACTICE_IDS = new Set(
@@ -127,12 +134,18 @@ export function validateCurriculumMap(catalog, root = ROOT) {
   const assignments = Array.isArray(catalog?.assignments) ? catalog.assignments : [];
   const modules = Array.isArray(catalog?.modules) ? catalog.modules : [];
 
-  if (catalog?.version !== "1.0.0") errors.push("version must remain 1.0.0");
+  if (catalog?.$schema !== "schemas/curriculum-map.schema.json") {
+    errors.push("$schema must reference schemas/curriculum-map.schema.json");
+  }
+  if (catalog?.version !== "1.1.0") errors.push("version must remain 1.1.0");
   if (catalog?.repository !== "TechArc-io/studylab-practice") {
     errors.push("repository must remain TechArc-io/studylab-practice");
   }
   if (catalog?.pathwayRelease !== "release-foundation-2026") {
     errors.push("pathwayRelease must remain release-foundation-2026");
+  }
+  if (catalog?.repositoryReleaseTag !== "release-foundation-2026-v2") {
+    errors.push("repositoryReleaseTag must remain release-foundation-2026-v2");
   }
   if (new Set(modules).size !== modules.length) errors.push("modules must be unique");
   for (const moduleId of modules) {
@@ -173,6 +186,9 @@ export function validateCurriculumMap(catalog, root = ROOT) {
     if (assignment.submission?.evidence !== expected.submission.evidence) {
       errors.push(`${id} must use ${expected.submission.evidence} evidence`);
     }
+    if (assignment.submission?.branchPrefix !== expected.submission.branchPrefix) {
+      errors.push(`${id} branch prefix must be ${expected.submission.branchPrefix}`);
+    }
     if (
       JSON.stringify(assignment.submission?.requiredChecks) !==
       JSON.stringify(expected.submission.requiredChecks)
@@ -210,6 +226,21 @@ export function validateCurriculumMap(catalog, root = ROOT) {
     const body = readFileSync(absolutePath, "utf8");
     if (!body.includes(`\`${id}\``)) errors.push(`${path} does not declare stable id ${id}`);
     if (!body.includes("docs/git-workflow.md")) errors.push(`${path} must link to the shared Git workflow`);
+    if (!body.includes(expected.submission.branchPrefix)) {
+      errors.push(`${path} must state branch prefix ${expected.submission.branchPrefix}`);
+    }
+    if (JSON.stringify(assignment.prerequisites ?? null) !== JSON.stringify(expected.prerequisites ?? null)) {
+      errors.push(`${id} prerequisites drift from the release contract`);
+    }
+    if (id === "ms-git-collab") {
+      const fixture = resolve(root, "docs", "collaboration-exercise.md");
+      if (!existsSync(fixture) || !lstatSync(fixture).isFile()) {
+        errors.push("ms-git-collab requires docs/collaboration-exercise.md");
+      }
+      if (!body.includes("docs/collaboration-exercise.md")) {
+        errors.push("assignments/01-git-collaboration.md must link to the deterministic conflict fixture");
+      }
+    }
     if (NEW_PRACTICE_IDS.has(id)) {
       for (const section of REQUIRED_PRACTICE_SECTIONS) {
         if (!body.includes(section)) errors.push(`${path} is missing required section ${section}`);
@@ -244,6 +275,9 @@ export function validateCurriculumMap(catalog, root = ROOT) {
     }
     if (submission.target !== "learner-fork" || !["github-pr", "deployment", "url"].includes(submission.evidence)) {
       errors.push(`${id} has an unsupported evidence/target combination`);
+    }
+    if (submission.branchPrefix !== `assignment/${id}`) {
+      errors.push(`${id} must declare branch prefix assignment/${id}`);
     }
     if (!Array.isArray(submission.requiredChecks) || submission.requiredChecks.length === 0 || submission.requiredChecks.some((check) => typeof check !== "string" || !check.trim())) {
       errors.push(`${id} must declare non-empty required checks`);
