@@ -40,6 +40,9 @@ afterEach(() => {
 describe("curriculum-map contract", () => {
   it("accepts the complete twelve-assignment release contract", () => {
     expect(validateCurriculumMap(catalog)).toEqual([]);
+    expect(catalog.version).toBe("1.1.0");
+    expect(catalog.pathwayRelease).toBe("release-foundation-2026");
+    expect(catalog.repositoryReleaseTag).toBe("release-foundation-2026-v2");
     expect(catalog.assignments).toHaveLength(12);
     expect(catalog.assignments.filter((assignment) => assignment.tier === "practice")).toHaveLength(5);
     expect(catalog.assignments.filter((assignment) => assignment.tier === "milestone")).toHaveLength(6);
@@ -49,10 +52,21 @@ describe("curriculum-map contract", () => {
   it("uses the shared assignment branch format in every assignment brief", () => {
     for (const assignment of catalog.assignments) {
       const source = readFileSync(join(process.cwd(), assignment.path), "utf8");
-      expect(source, assignment.id).toContain(
-        `assignment/${assignment.id}-short-description`,
-      );
+      expect(assignment.submission.branchPrefix, assignment.id).toBe(`assignment/${assignment.id}`);
+      expect(source, assignment.id).toContain(assignment.submission.branchPrefix);
     }
+  });
+
+  it("makes collaboration a distinct, prerequisite-backed conflict exercise", () => {
+    const collaboration = catalog.assignments.find((assignment) => assignment.id === "ms-git-collab");
+    expect(collaboration?.prerequisites).toEqual({
+      modules: ["git-github"],
+      approvedTasks: ["tt-fork-first-pr"],
+    });
+    expect(readFileSync(join(process.cwd(), "assignments/01-git-collaboration.md"), "utf8"))
+      .toContain("docs/collaboration-exercise.md");
+    expect(readFileSync(join(process.cwd(), "docs/collaboration-exercise.md"), "utf8"))
+      .toContain("Shared status:");
   });
 
   it("lists every assignment as an unchecked personal tracker item", () => {
@@ -69,7 +83,7 @@ describe("curriculum-map contract", () => {
     malformed.assignments[1].id = malformed.assignments[0].id;
     malformed.assignments[1].path = malformed.assignments[0].path;
     malformed.assignments[1].moduleId = "retired-module";
-    malformed.assignments[1].submission = { target: "official-repository", evidence: "url", requiredChecks: [] };
+    malformed.assignments[1].submission = { target: "official-repository", evidence: "url", branchPrefix: "feature/wrong", requiredChecks: [] };
 
     const errors = validateCurriculumMap(malformed);
     expect(errors).toEqual(expect.arrayContaining([
@@ -77,6 +91,7 @@ describe("curriculum-map contract", () => {
       "duplicate assignment path: assignments/08-first-fork-pr.md",
       "tt-fork-first-pr must use canonical module git-github",
       "tt-fork-first-pr has an unsupported evidence/target combination",
+      "tt-fork-first-pr must declare branch prefix assignment/tt-fork-first-pr",
       "tt-fork-first-pr must declare non-empty required checks",
     ]));
   });

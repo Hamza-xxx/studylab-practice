@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astudylab.com/schemas/studylab-practice-curriculum-map-1.1.0.json",
+  "title": "Studylab practice curriculum contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "version", "repository", "pathwayRelease", "repositoryReleaseTag", "modules", "assignments"],
+  "properties": {
+    "$schema": { "const": "schemas/curriculum-map.schema.json" },
+    "version": { "const": "1.1.0" },
+    "repository": { "const": "TechArc-io/studylab-practice" },
+    "pathwayRelease": { "const": "release-foundation-2026" },
+    "repositoryReleaseTag": { "const": "release-foundation-2026-v2" },
+    "modules": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+    },
+    "assignments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "moduleId", "tier", "path", "submission"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "moduleId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "tier": { "enum": ["practice", "milestone", "capstone"] },
+          "path": { "type": "string", "pattern": "^assignments/[A-Za-z0-9._/-]+\\.md$" },
+          "prerequisites": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "modules": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+              "approvedTasks": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+            }
+          },
+          "submission": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["target", "evidence", "branchPrefix", "requiredChecks"],
+            "properties": {
+              "target": { "const": "learner-fork" },
+              "evidence": { "enum": ["github-pr", "deployment", "url"] },
+              "branchPrefix": { "type": "string", "pattern": "^assignment/[a-z0-9-]+$" },
+              "requiredChecks": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+            }
+          }
+        }
+      }
+    }
+  }
+}
