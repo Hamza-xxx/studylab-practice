@@ -1,5 +1,4 @@
 import { PracticeList } from "@/src/components/PracticeList";
-import { practiceItems } from "@/src/data/practice-items";
 
 export default function HomePage() {
   return (
@@ -23,7 +22,8 @@ export default function HomePage() {
             View assignments
           </a>
         </div>
-        <PracticeList initialItems={practiceItems} />
+
+        <PracticeList />
       </section>
     </main>
   );
