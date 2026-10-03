@@ -16,15 +16,21 @@ export function PracticeList({ initialItems }: { initialItems: PracticeItem[] })
   return (
     <div>
       <div className="filter">
-        <label htmlFor="practice-filter">Filter the backlog</label>
-        <input
-          id="practice-filter"
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Try “accessible”"
-          type="search"
-          value={query}
-        />
-      </div>
+  <label htmlFor="practice-filter">Filter the backlog</label>
+  <input
+    id="practice-filter"
+    onChange={(event) => setQuery(event.target.value)}
+    placeholder="Try “accessible”"
+    type="search"
+    value={query}
+  />
+
+  {query && (
+    <button type="button" onClick={() => setQuery("")}>
+      Clear filters
+    </button>
+  )}
+</div>
 
       {filteredItems.length ? (
         <ul className="practice-list" aria-live="polite">
