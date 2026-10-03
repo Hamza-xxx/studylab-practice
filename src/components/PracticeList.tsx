@@ -9,8 +9,10 @@ export function PracticeList({ initialItems }: { initialItems: PracticeItem[] })
     const normalized = query.trim().toLowerCase();
     if (!normalized) return initialItems;
     return initialItems.filter((item) =>
-      `${item.title} ${item.description}`.toLowerCase().includes(normalized),
-    );
+  `${item.title} ${item.description} ${item.status}`
+    .toLowerCase()
+    .includes(normalized),
+);
   }, [initialItems, query]);
 
   return (
