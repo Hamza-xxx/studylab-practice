@@ -7,9 +7,19 @@
   --border: #d8e0ee;
   --brand: #2563eb;
   --brand-dark: #1d4ed8;
+  --success: #166534;
+  --success-background: #f0fdf4;
+  --error: #b91c1c;
+  --error-background: #fef2f2;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
 
 body {
   margin: 0;
@@ -17,6 +27,13 @@ body {
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
 }
 
 main {
@@ -25,25 +42,284 @@ main {
   padding-block: 4rem;
 }
 
-.hero { max-width: 46rem; margin-bottom: 2rem; }
-.eyebrow { margin: 0 0 .5rem; color: var(--brand-dark); font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-h1, h2 { margin: 0; line-height: 1.15; }
-h1 { font-size: clamp(2.25rem, 6vw, 4.5rem); letter-spacing: -.04em; }
-h2 { font-size: 1.5rem; }
-.lede { color: var(--muted); font-size: 1.125rem; }
-.panel { border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); padding: clamp(1rem, 4vw, 2rem); box-shadow: 0 .75rem 2.5rem rgb(38 55 84 / 8%); }
-.section-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
-a { color: var(--brand-dark); font-weight: 700; }
-.filter { display: grid; gap: .5rem; margin-bottom: 1rem; }
-.filter label { font-size: .875rem; font-weight: 700; }
-.filter input { width: 100%; min-height: 2.75rem; border: 1px solid var(--border); border-radius: .625rem; padding-inline: .875rem; font: inherit; }
-.filter input:focus { outline: 3px solid rgb(37 99 235 / 25%); border-color: var(--brand); }
-.practice-list { display: grid; gap: .75rem; padding: 0; list-style: none; }
-.practice-card { border: 1px solid var(--border); border-radius: .75rem; padding: 1rem; }
-.practice-card p { margin: .25rem 0 0; color: var(--muted); }
-.status { display: inline-block; margin-top: .75rem; border-radius: 999px; background: #e8efff; color: var(--brand-dark); padding: .2rem .6rem; font-size: .75rem; font-weight: 700; }
-.empty { border: 1px dashed var(--border); border-radius: .75rem; color: var(--muted); padding: 1rem; text-align: center; }
+.hero {
+  max-width: 46rem;
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--brand-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+.lede {
+  color: var(--muted);
+  font-size: 1.125rem;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+  padding: clamp(1rem, 4vw, 2rem);
+  box-shadow: 0 0.75rem 2.5rem rgb(38 55 84 / 8%);
+}
+
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: var(--brand-dark);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgb(37 99 235 / 30%);
+  outline-offset: 2px;
+}
+
+/* Create and edit forms */
+
+.practice-form {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: #f8faff;
+}
+
+.practice-form > div {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.practice-form label {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.practice-form input,
+.practice-form textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.75rem 0.875rem;
+}
+
+.practice-form input {
+  min-height: 2.75rem;
+}
+
+.practice-form textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.practice-form input:focus,
+.practice-form textarea:focus {
+  border-color: var(--brand);
+}
+
+button {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 0.625rem;
+  background: var(--brand);
+  color: #ffffff;
+  padding: 0.65rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: var(--brand-dark);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Form feedback */
+
+.form-message {
+  margin: 0;
+  border-radius: 0.625rem;
+  padding: 0.75rem;
+  font-weight: 700;
+}
+
+.form-message.success {
+  background: var(--success-background);
+  color: var(--success);
+}
+
+.form-message.error {
+  background: var(--error-background);
+  color: var(--error);
+}
+
+/* Search / filter */
+
+.filter {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filter label {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.filter input {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  padding-inline: 0.875rem;
+}
+
+.filter input:focus {
+  border-color: var(--brand);
+}
+
+/* Practice cards */
+
+.practice-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.practice-card {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.practice-card > strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.practice-card p {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+}
+
+.practice-card p strong {
+  color: var(--ink);
+}
+
+.practice-card form {
+  margin-top: 0.75rem;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 0.75rem;
+  border-radius: 999px;
+  background: #e8efff;
+  color: var(--brand-dark);
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: 0.75rem;
+  color: var(--muted);
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Detail / edit page */
+
+.panel > section {
+  margin-block: 2rem;
+}
+
+.panel > section h2 {
+  margin-bottom: 1rem;
+}
+
+/* Small screens, including 320px */
 
 @media (max-width: 40rem) {
-  main { padding-block: 2rem; }
+  main {
+    width: min(100% - 1rem, 70rem);
+    padding-block: 2rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+
+  .panel {
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .section-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .practice-form {
+    padding: 0.75rem;
+  }
+
+  .practice-card {
+    padding: 0.875rem;
+  }
+
+  button {
+    width: 100%;
+  }
 }
