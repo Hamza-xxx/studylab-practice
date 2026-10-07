@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { PracticeItem } from "@/src/data/practice-items";
-
+import type { PracticeItem } from "@/src/lib/practice-items";
 export function PracticeList({ initialItems }: { initialItems: PracticeItem[] }) {
   const [query, setQuery] = useState("");
   const filteredItems = useMemo(() => {

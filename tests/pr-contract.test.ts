@@ -45,4 +45,14 @@ describe("learner pull-request contract", () => {
       }),
     ).toContain("Learner pull requests must target main in your own fork.");
   });
+
+  it("uses the declared branch prefix as the machine contract", () => {
+    expect(
+      validatePullRequest({
+        title: "[tt-fork-first-pr] Clarify setup",
+        headRef: "assignment/tt-fork-first-pr-clarify-setup",
+        baseRef: "main",
+      }),
+    ).toEqual([]);
+  });
 });

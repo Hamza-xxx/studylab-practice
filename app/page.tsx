@@ -1,7 +1,10 @@
 import { PracticeList } from "@/src/components/PracticeList";
 import { practiceItems } from "@/src/data/practice-items";
+import { parsePracticeItems } from "@/src/lib/practice-items";
 
 export default function HomePage() {
+  const parsedItems = parsePracticeItems(practiceItems);
+
   return (
     <main>
       <header className="hero">
@@ -23,7 +26,12 @@ export default function HomePage() {
             View assignments
           </a>
         </div>
-        <PracticeList initialItems={practiceItems} />
+
+        {parsedItems.success ? (
+          <PracticeList initialItems={parsedItems.data} />
+        ) : (
+          <p role="alert">Practice items could not be loaded.</p>
+        )}
       </section>
     </main>
   );
