@@ -1,11 +1,4 @@
-export type PracticeStatus = "ready" | "in-progress" | "review";
-
-export type PracticeItem = {
-  id: string;
-  title: string;
-  description: string;
-  status: PracticeStatus;
-};
+import type { PracticeItem } from "@/src/lib/practice-items";
 
 export const practiceItems: PracticeItem[] = [
   {

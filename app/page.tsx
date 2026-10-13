@@ -1,3 +1,4 @@
+
 import { PracticeList } from "@/src/components/PracticeList";
 
 export default function HomePage() {

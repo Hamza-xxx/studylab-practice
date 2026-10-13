@@ -1,7 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";import { PracticeList } from "@/src/components/PracticeList";
-import type { PracticeItem } from "@/src/data/practice-items";
-
+import type { PracticeItem } from "@/src/lib/practice-items";
 afterEach(() => {
   cleanup();
 });

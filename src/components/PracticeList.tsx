@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { PracticeItem } from "@/src/data/practice-items";
+import type { PracticeItem } from "@/src/lib/practice-items";
 import {
   requestPracticeItems,
   type PracticeRequest,
